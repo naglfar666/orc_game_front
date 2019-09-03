@@ -10,7 +10,22 @@
     <script src="./axios.min.js"></script>
 </head>
 <body>
-    <script src="./keyboard.js"></script>
+    <script src="./handlers/config.js"></script>
+    <script src="./handlers/keyboard.js"></script>
     <script src="./app.js"></script>
+    <script src="./entities/world.js"></script>
+    <script src="./entities/person.js"></script>
+
+    <script>
+        async function startApp() {
+            let worldLoaded = await setupWorld();
+            console.log(worldLoaded)
+
+            // let personLoaded = await setupPerson()
+            // console.log(personLoaded)
+        }
+
+        startApp()
+    </script>
 </body>
 </html>
