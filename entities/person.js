@@ -6,22 +6,25 @@
 var PERSON = null
 
 function setupPerson() {
+    var newPositionX = 0
+    var newPositionY = 0
+
     return new Promise((resolve, reject) => {
 
         PIXI.loader
-            .add("/res/cat.png")
+            .add('/res/city_tiles/tile_0186.png')
             .load(renderPerson);
             
         function renderPerson() {
-            PERSON = new PIXI.Sprite(PIXI.loader.resources["/res/cat.png"].texture);
+            PERSON = new PIXI.Sprite(PIXI.loader.resources['/res/city_tiles/tile_0186.png'].texture);
 
             PERSON.x = 0;
             PERSON.y = 0;
 
             PERSON.vx = 0;
             PERSON.vy = 0;
-            PERSON.width = 96;
-            PERSON.height = 96;
+            PERSON.width = 16;
+            PERSON.height = 16;
 
             let totalPasses = 0;
 
@@ -81,7 +84,7 @@ function setupPerson() {
             /**
              * Подгружаем данные из БД
              */
-            axios.get('http://127.0.0.1:8080/api/v1/user/get_position',{
+            axios.get(CONFIG.API_URL + '/user/get_position',{
                 headers: {
                     'token': CONFIG.TOKEN
                 }
@@ -101,15 +104,13 @@ function setupPerson() {
                             && PERSON.y + PERSON.vy >= 0
                             && PERSON.y + PERSON.vy + PERSON.height <= WORLD.height
                         ) {
-                            WORLD.pivot.x += PERSON.vx;
-                            WORLD.pivot.y += PERSON.vy;
 
-                            let newPositionX = PERSON.x + PERSON.vx;
-                            let newPositionY = PERSON.y + PERSON.vy;
+                            newPositionX = PERSON.x + PERSON.vx;
+                            newPositionY = PERSON.y + PERSON.vy;
 
-                            if ((newPositionY !== PERSON.y || newPositionX !== PERSON.x) && totalPasses % 10 === 0) {
+                            if ((newPositionY !== PERSON.y || newPositionX !== PERSON.x) && totalPasses % 50 === 0 ) {
                                 
-                                axios.post('http://127.0.0.1:8080/api/v1/user/set_position',{
+                                axios.post(CONFIG.API_URL + '/user/set_position',{
                                     xAxis: PERSON.x,
                                     yAxis: PERSON.y
                                 },{
@@ -126,10 +127,16 @@ function setupPerson() {
                                     }
                                 })
                             }
-                            totalPasses += PERSON.vx;
-                            totalPasses += PERSON.vy;
-                            PERSON.x += PERSON.vx;
-                            PERSON.y += PERSON.vy;
+
+                            if ((newPositionY !== PERSON.y || newPositionX !== PERSON.x) && checkWorldStoppers() ) {
+                                totalPasses += PERSON.vx;
+                                totalPasses += PERSON.vy;
+                                PERSON.x += PERSON.vx;
+                                PERSON.y += PERSON.vy;
+                                WORLD.pivot.x += PERSON.vx;
+                                WORLD.pivot.y += PERSON.vy;
+                            }
+                            
                             
                         }
                     })
@@ -140,6 +147,21 @@ function setupPerson() {
                     resolve(false);
                 }
             })
+        }
+
+        function checkWorldStoppers() {
+            let _stoppers = WORLD.GAME_OBJECTS.STOPPERS
+            for (let i = 0; i < _stoppers.length; i++) {
+                if (
+                    (_stoppers[i].fromX < newPositionX || _stoppers[i].fromX < (newPositionX + PERSON.width))
+                    && (_stoppers[i].toX > newPositionX || _stoppers[i].toX > (newPositionX + PERSON.width))
+                    && (_stoppers[i].fromY < newPositionY || _stoppers[i].fromY < (newPositionY + PERSON.height))
+                    && (_stoppers[i].toY > newPositionY || _stoppers[i].toY > (newPositionY + PERSON.height))
+                ) {
+                    return false
+                }
+            }
+            return true;
         }
         
         
