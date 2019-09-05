@@ -48,7 +48,7 @@ function setupWorld() {
                             break;
 
                         case 3:
-                            // new TrashCan(gameObjects[i]).render()
+                            await new TrashCan(gameObjects[i]).render()
                             break;
                     }
                 }
