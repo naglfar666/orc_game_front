@@ -108,7 +108,7 @@ function setupPerson() {
                             newPositionX = PERSON.x + PERSON.vx;
                             newPositionY = PERSON.y + PERSON.vy;
 
-                            if ((newPositionY !== PERSON.y || newPositionX !== PERSON.x) && totalPasses % 50 === 0 ) {
+                            if (newPositionY !== PERSON.y || newPositionX !== PERSON.x) {
                                 
                                 axios.post(CONFIG.API_URL + '/user/set_position',{
                                     xAxis: PERSON.x,
