@@ -6,13 +6,19 @@ const WORLD = new PIXI.Container({
     height: WORLD_HEIGHT
 });
 
+
+
 WORLD.x = 50;
 WORLD.y = 50;
+
+WORLD.zIndex = 1;
 
 WORLD.GAME_OBJECTS = {
     STOPPERS: [],
     ROADS: []
 }
+
+const LOOT_CONTAINER = new LootContainer()
 
 function setupWorld() {
     return new Promise((resolve, reject) => {

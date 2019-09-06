@@ -13,6 +13,7 @@ class TrashCan {
         this.action = params.action
 
         this.gameObjectId = params.gameObject.id
+        this.mapObjectId = params.id
         this._trash_cans = null
     }
 
@@ -48,6 +49,17 @@ class TrashCan {
                 context._trash_cans.buttonMode = true
     
                 context._trash_cans.on('pointerdown', () => {
+                    axios.get(CONFIG.API_URL + '/game_object/open/' + context.mapObjectId,{
+                        headers: {
+                            'token': CONFIG.TOKEN
+                        }
+                    }).then(response => {
+                        if (response.data.type === 'success') {
+                            LOOT_CONTAINER.fillItems(context, response.data.data)
+                        }
+                        console.log(response)
+                    })
+
                     console.log(context.title, context.description)
                 })
             }
