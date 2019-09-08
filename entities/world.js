@@ -16,6 +16,8 @@ WORLD.GAME_OBJECTS = {
 
 const LOOT_CONTAINER = new LootContainer()
 
+const BAG = new Bag().render()
+
 function setupWorld() {
     return new Promise((resolve, reject) => {
         /**
