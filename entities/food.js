@@ -1,8 +1,14 @@
 class Food {
-    constructor (context, params, x, y) {
+    /**
+     * @param {*} context - Экземпляр контейнера, в котором отрисовываются элементы
+     * @param {*} params - Список параметров объекта
+     * @param x - Позиция по диагонали
+     * @param y - Позиция по вертикали
+     * @param clickedObjectContext - Экземпляр объекта, по которому был произведен клик
+     */
+    constructor (context, params, x, y, clickedObjectContext) {
         this.x = x
         this.y = y
-        this.mapObjectId = params.id
 
         this.title = params.lootObject.title
         this.description = params.lootObject.description
@@ -12,7 +18,9 @@ class Food {
         this.iconRes = '/res/food/' + this.icon + '.png'
         this.action = params.action
 
-        this.lootObjectId = params.id
+        this.gameObjectMapLootObjectId = params.id
+        this.mapObjectId = params.gameObjectMapId
+        this.clickedObject = clickedObjectContext
         this.amount = params.amount
         this._food = null
     }
@@ -56,11 +64,32 @@ class Food {
             context._food.y = context.y
             context._food.height = context.height
             context._food.width = context.width
-            // console.log(context._food)
+
+            context._food.interactive = true
+            context._food.buttonMode = true
+
+            context._food.on('pointerdown', () => {
+
+                axios.get(CONFIG.API_URL + '/game_object/loot/' + context.mapObjectId + '/' + context.gameObjectMapLootObjectId,{
+                    headers: {
+                        'token': CONFIG.TOKEN
+                    }
+                }).then(response => {
+                    if (response.data.type === 'success') {
+                        context.clickedObject.context.emit('pointerdown')
+                    }
+                    console.log(response)
+                })
+            })
+            
             LOOT_CONTAINER.context.addChild(context._food)
 
             resolve(true)
         })
         
+    }
+
+    get context () {
+        return this._food
     }
 }

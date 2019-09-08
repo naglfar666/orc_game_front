@@ -1,13 +1,27 @@
 class LootContainer {
     constructor () {
+        this._init()
+    }
+
+    _init () {
         this._loot_container = new PIXI.Container();
 
         this._loot_container.x = 0
         this._loot_container.y = 0
     }
 
+    _clear () {
+        WORLD.removeChild(this._loot_container)
+    }
+    /**
+     * Заполнение контейнера с лутом
+     * @param {*} context - Экземпляр класса, вызывающий открытие контейнера
+     * @param {*} items - Список элементов, которые требуется открыть в контейнере
+     */
     async fillItems(context, items) {
-        let newWidth = 0, newHeight = 0
+        this._clear()
+
+        this._init()
 
         this._loot_container.x = context.x + context.width
         this._loot_container.y = context.y
@@ -20,7 +34,7 @@ class LootContainer {
             for (let i = 0; i < items.length; i++) {
                 switch (items[i].lootObject.type) {
                     case 1:
-                        await new Food(this._loot_container, items[i], itemX, itemY).render()
+                        await new Food(this._loot_container, items[i], itemX, itemY, context).render()
                         break;
                 }
                 
@@ -35,10 +49,6 @@ class LootContainer {
         }
         
         WORLD.addChild(this._loot_container)
-    }
-
-    clear () {
-
     }
 
     get context() {

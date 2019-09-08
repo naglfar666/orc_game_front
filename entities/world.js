@@ -6,8 +6,6 @@ const WORLD = new PIXI.Container({
     height: WORLD_HEIGHT
 });
 
-
-
 WORLD.x = 50;
 WORLD.y = 50;
 
@@ -37,6 +35,12 @@ function setupWorld() {
 
                 bg.width = WORLD_WIDTH;
                 bg.height = WORLD_HEIGHT;
+
+                bg.interactive = true
+                bg.on('pointerdown', () => {
+                    LOOT_CONTAINER._clear()
+                })
+
                 WORLD.addChild(bg);
 
                 let gameObjects = response.data.data
@@ -62,20 +66,6 @@ function setupWorld() {
                 resolve(false)
             }
         })
-        /*try {
-            let bgTexture =  PIXI.Texture.fromImage('/res/city_tiles/tile_0028.png');
-
-            let bg = new PIXI.TilingSprite(bgTexture);
-
-            bg.width = WORLD_WIDTH;
-            bg.height = WORLD_HEIGHT;
-            WORLD.addChild(bg);
-
-            resolve(true)
-        } catch (error) {
-            console.log(error)
-            resolve(false)
-        }*/
         
     })
 }

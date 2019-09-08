@@ -75,4 +75,8 @@ class TrashCan {
         })
         
     }
+
+    get context() {
+        return this._trash_cans
+    }
 }
