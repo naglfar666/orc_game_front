@@ -1,7 +1,7 @@
 class Food {
-    constructor (context, params) {
-        this.x = context.x
-        this.y = context.y
+    constructor (context, params, x, y) {
+        this.x = x
+        this.y = y
         this.mapObjectId = params.id
 
         this.title = params.lootObject.title
@@ -37,14 +37,27 @@ class Food {
 
     setup(context) {
         return new Promise ((resolve, reject) => {
-            context._food = new PIXI.Sprite(PIXI.loader.resources[context.iconRes].texture);
+
+            let graphic = new PIXI.Graphics()
+
+            graphic.x = context.x
+            graphic.y = context.y
+
+            LOOT_CONTAINER.context.addChild(graphic)
+
+            graphic.lineStyle(1.5, 0xc4b875)
+            graphic.beginFill(0x4b4b4b)
+            graphic.drawCircle(4,4,8)
+            graphic.endFill()
+
+            context._food = new PIXI.Sprite(PIXI.loader.resources[context.iconRes].texture)
             
             context._food.x = context.x
             context._food.y = context.y
             context._food.height = context.height
             context._food.width = context.width
-
-            LOOT_CONTAINER.context().addChild(context._food)
+            // console.log(context._food)
+            LOOT_CONTAINER.context.addChild(context._food)
 
             resolve(true)
         })

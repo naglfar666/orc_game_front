@@ -11,8 +11,6 @@ const WORLD = new PIXI.Container({
 WORLD.x = 50;
 WORLD.y = 50;
 
-WORLD.zIndex = 1;
-
 WORLD.GAME_OBJECTS = {
     STOPPERS: [],
     ROADS: []

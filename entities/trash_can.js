@@ -57,10 +57,7 @@ class TrashCan {
                         if (response.data.type === 'success') {
                             LOOT_CONTAINER.fillItems(context, response.data.data)
                         }
-                        console.log(response)
                     })
-
-                    console.log(context.title, context.description)
                 })
             }
             
