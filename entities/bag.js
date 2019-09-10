@@ -4,6 +4,7 @@ class Bag {
         this.width = 56
         this.height = 56
 
+        this.actionName = 'use'
         this.x = 10
         this.y = window.innerHeight - 50
     }
@@ -36,10 +37,33 @@ class Bag {
             context._bag.y = context.y
             context._bag.height = context.height
             context._bag.width = context.width
+
+            context._bag.interactive = true
+            context._bag.buttonMode = true
+
+            context._bag.on('pointerdown', () => {
+                axios.get(CONFIG.API_URL + '/user/bag/',{
+                    headers: {
+                        'token': CONFIG.TOKEN
+                    }
+                }).then(response => {
+                    if (response.data.type === 'success') {
+                        LOOT_CONTAINER.fillItems(context, response.data.data)
+                    }
+                })
+            })
     
             WORLD.addChild(context._bag)
             resolve(true)
         })
         
+    }
+
+    get context () {
+        return this._bag
+    }
+
+    get action () {
+        return this.actionName
     }
 }

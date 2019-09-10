@@ -21,6 +21,7 @@ class Food {
         this.gameObjectMapLootObjectId = params.id
         this.mapObjectId = params.gameObjectMapId
         this.clickedObject = clickedObjectContext
+        this.lootObjectId = params.lootObject.id
         this.amount = params.amount
         this._food = null
     }
@@ -69,17 +70,30 @@ class Food {
             context._food.buttonMode = true
 
             context._food.on('pointerdown', () => {
-
-                axios.get(CONFIG.API_URL + '/game_object/loot/' + context.mapObjectId + '/' + context.gameObjectMapLootObjectId,{
-                    headers: {
-                        'token': CONFIG.TOKEN
-                    }
-                }).then(response => {
-                    if (response.data.type === 'success') {
-                        context.clickedObject.context.emit('pointerdown')
-                    }
-                    console.log(response)
-                })
+                if (context.clickedObject.action === 'loot') {
+                    axios.get(CONFIG.API_URL + '/game_object/loot/' + context.mapObjectId + '/' + context.gameObjectMapLootObjectId,{
+                        headers: {
+                            'token': CONFIG.TOKEN
+                        }
+                    }).then(response => {
+                        if (response.data.type === 'success') {
+                            context.clickedObject.context.emit('pointerdown')
+                        }
+                        console.log(response)
+                    })
+                } else if (context.clickedObject.action === 'use') {
+                    axios.get(CONFIG.API_URL + '/user/eat/' + context.lootObjectId,{
+                        headers: {
+                            'token': CONFIG.TOKEN
+                        }
+                    }).then(response => {
+                        if (response.data.type === 'success') {
+                            context.clickedObject.context.emit('pointerdown')
+                        }
+                        console.log(response)
+                    })
+                }
+                
             })
             
             LOOT_CONTAINER.context.addChild(context._food)

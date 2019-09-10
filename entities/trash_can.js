@@ -10,7 +10,8 @@ class TrashCan {
         this.width = params.gameObject.width
         this.icon = params.gameObject.iconSprite
         this.iconRes = '/res/trash_cans/' + this.icon + '.png'
-        this.action = params.action
+        this.actionName = 'loot'
+        this.objectAction = params.action
 
         this.gameObjectId = params.gameObject.id
         this.mapObjectId = params.id
@@ -44,7 +45,7 @@ class TrashCan {
             context._trash_cans.height = context.height
             context._trash_cans.width = context.width
 
-            if (context.action) {
+            if (context.objectAction) {
                 context._trash_cans.interactive = true
                 context._trash_cans.buttonMode = true
     
@@ -60,7 +61,6 @@ class TrashCan {
                     })
                 })
             }
-            
 
             WORLD.addChild(context._trash_cans)
 
@@ -78,5 +78,9 @@ class TrashCan {
 
     get context() {
         return this._trash_cans
+    }
+
+    get action () {
+        return this.actionName
     }
 }
