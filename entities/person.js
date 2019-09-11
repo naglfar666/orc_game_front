@@ -4,6 +4,8 @@
  */
 
 var PERSON = null
+var HEALTH = null
+var RESPECT = null
 
 function setupPerson() {
     var newPositionX = 0
@@ -84,6 +86,28 @@ function setupPerson() {
             /**
              * Подгружаем данные из БД
              */
+            axios.get(CONFIG.API_URL + '/health/get',{
+                headers: {
+                    'token': CONFIG.TOKEN
+                }
+                }).then(async (response) => {
+                    if (response.data.type === 'success') {
+                        HEALTH = await new Health(response.data.data).render()
+
+                        axios.get(CONFIG.API_URL + '/respect/get',{
+                            headers: {
+                                'token': CONFIG.TOKEN
+                            }
+                            }).then(async (response) => {
+                                if (response.data.type === 'success') {
+                                    RESPECT = await new Respect(response.data.data).render()
+                                }
+                            })
+                    }
+                })
+
+            
+
             axios.get(CONFIG.API_URL + '/user/get_position',{
                 headers: {
                     'token': CONFIG.TOKEN
