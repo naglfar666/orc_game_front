@@ -59,6 +59,23 @@ class Food {
             graphic.drawCircle(4,4,8)
             graphic.endFill()
 
+            if (context.amount >= 1) {
+                let amountGraphic = new PIXI.Graphics()
+                amountGraphic.x = context.x + context.width
+                amountGraphic.y = context.y - 5
+                LOOT_CONTAINER.context.addChild(amountGraphic)
+                
+                amountGraphic.lineStyle(1.5, 0xec0000)
+                amountGraphic.beginFill(0xec0000)
+                amountGraphic.drawCircle(2,2,4)
+                amountGraphic.endFill()
+
+                let amountText = new PIXI.Text(context.amount,{fontFamily : 'Arial', fontSize: 8, fill : 0xffffff});
+                amountText.x = amountGraphic.x - 1
+                amountText.y = amountGraphic.y - 3
+                LOOT_CONTAINER.context.addChild(amountText)
+            }
+
             context._food = new PIXI.Sprite(PIXI.loader.resources[context.iconRes].texture)
             
             context._food.x = context.x
@@ -82,7 +99,7 @@ class Food {
                         console.log(response)
                     })
                 } else if (context.clickedObject.action === 'use') {
-                    axios.get(CONFIG.API_URL + '/user/eat/' + context.lootObjectId,{
+                    axios.get(CONFIG.API_URL + '/food/eat/' + context.lootObjectId,{
                         headers: {
                             'token': CONFIG.TOKEN
                         }
